@@ -13,14 +13,7 @@ export async function GET() {
   await connectDB();
   try {
     const books = await Books.find({}).lean().exec();
-    const mappedBooks = books.map((book) => {
-      return {
-        _id: book._id,
-        bookName: book.bookName,
-        author: book.author,
-        sum: book.sum,
-      };
-    });
+
     return Response.json(books);
   } catch (error) {
     return new Response(`Webhook error: ${error}`, {
@@ -42,6 +35,25 @@ export async function POST(req: Request) {
       { _id: bookID },
       { $set: { author: author, name: name, sum: val } }
     );
+
+    return Response.json({ message: "Updating book was successful" });
+  } catch (error) {
+    return new Response(`Webhook error: ${error}`, {
+      status: 400,
+    });
+  }
+}
+
+export async function DELETE(req: Request) {
+  // Get data from your database
+  const { bookID } = await req.json();
+  if (!bookID) {
+    return Response.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  await connectDB();
+  try {
+    await Books.findOneAndDelete({ _id: bookID });
 
     return Response.json({ message: "Updating book was successful" });
   } catch (error) {

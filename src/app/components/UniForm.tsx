@@ -2,7 +2,7 @@
 import mongoose, { ObjectId } from "mongoose";
 import { Input } from "@nextui-org/input";
 import { Button, Link } from "@nextui-org/react";
-import { FormEvent } from "react";
+import { FormEvent, useRef } from "react";
 type props = {
   formValues: (
     | {
@@ -29,6 +29,7 @@ type props = {
  * @returns UniForm component.
  */
 export default function UniForm(props: props) {
+  const pressedButton = useRef<string>();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const inputs = document.querySelectorAll("input");
@@ -41,13 +42,14 @@ export default function UniForm(props: props) {
     });
 
     const formData = new FormData(event.currentTarget);
-    //next auth logging to session
+    const action = formData.get("action");
+
     const author = formData.get("author");
     const sum = formData.get("val");
     const bookName = formData.get("bookName");
     const bookID = formData.get("id");
     alert(
-      JSON.stringify(author) +
+      JSON.stringify(pressedButton.current) +
         " " +
         JSON.stringify(sum) +
         " " +
@@ -57,13 +59,23 @@ export default function UniForm(props: props) {
         " "
     );
 
-    await fetch("/api/books", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ bookID, author, name: bookName, val: sum }),
-    });
+    if (pressedButton.current === "update") {
+      await fetch("/api/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookID, author, name: bookName, val: sum }),
+      });
+    } else if (pressedButton.current === "delete") {
+      await fetch("/api/books", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookID }),
+      });
+    }
   };
   return (
     <div className="flex flex-col">
@@ -88,14 +100,29 @@ export default function UniForm(props: props) {
               );
             })}
             <Button
-              name="update"
+              onClick={() => {
+                pressedButton.current = "update";
+              }}
+              id="action"
+              name="action"
+              value="update"
               type="submit"
               className="flex-2"
               color="success"
             >
               Save
             </Button>
-            <Button name="delete" className="flex-5" color="danger">
+            <Button
+              onClick={() => {
+                pressedButton.current = "delete";
+                props.formValues.splice(index, 1);
+              }}
+              name="action"
+              value="delete"
+              className="flex-5"
+              color="danger"
+              type="submit"
+            >
               Delete
             </Button>
           </form>
