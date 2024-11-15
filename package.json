@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^12.9.0",
     "mongodb": "^6.5.0",
     "next": "latest",
     "react": "^18",

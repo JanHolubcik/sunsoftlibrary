@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { testDatabaseConnection } from "../actions";
+import { testDatabaseConnection } from "./actions";
 import Link from "next/link";
-
+import "../styles/globals.css";
 export default async function Home() {
   const isConnected = await testDatabaseConnection();
 
