@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+       "strictPropertyInitialization": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,

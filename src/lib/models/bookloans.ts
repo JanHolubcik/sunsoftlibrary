@@ -18,7 +18,7 @@ import {
     allowMixed: Severity.ALLOW,
   },
 })
-class BooksClass {
+class BookLoansClass {
   @prop({ required: [true, "Id of book is required"], unique: true })
   bookID?: string;
   @prop({ required: [true, "Book name is required"], unique: true })
@@ -27,6 +27,6 @@ class BooksClass {
   sum?: number;
 }
 
-const books = getModelForClass(BooksClass);
+const booksLoan = getModelForClass(BookLoansClass);
 
-export { books, BooksClass };
+export { booksLoan, BookLoansClass };

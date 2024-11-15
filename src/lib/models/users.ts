@@ -42,6 +42,6 @@ class UsersClass {
   dateOfBirth?: Date;
 }
 
-const users = getModelForClass(UsersClass);
+const Users = getModelForClass(UsersClass);
 
-export { users, UsersClass };
+export { Users, UsersClass };

@@ -11,7 +11,7 @@ import {
 @ModelOptions({
   schemaOptions: {
     timestamps: true,
-    collection: "users",
+    collection: "books",
   },
   options: {
     allowMixed: Severity.ALLOW,
@@ -27,6 +27,6 @@ class BooksClass {
   sum?: number;
 }
 
-const books = getModelForClass(BooksClass);
+const Books = getModelForClass(BooksClass);
 
-export { books, BooksClass };
+export { Books, BooksClass };

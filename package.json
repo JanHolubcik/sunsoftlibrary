@@ -6,8 +6,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.8",
     "@typegoose/typegoose": "^12.9.0",
-    "mongodb": "^6.5.0",
+    "framer-motion": "^11.11.17",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.1",
     "next": "latest",
     "react": "^18",
     "react-dom": "^18"
