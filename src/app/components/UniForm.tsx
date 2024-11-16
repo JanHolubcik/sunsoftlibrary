@@ -1,8 +1,34 @@
 "use client";
 import mongoose, { ObjectId } from "mongoose";
 import { Input } from "@nextui-org/input";
-import { Button, Link } from "@nextui-org/react";
-import { FormEvent, useRef } from "react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  useDisclosure,
+  User,
+} from "@nextui-org/react";
+import { EditIcon } from "../../../public/EditIcon";
+import { VerticalDotsIcon } from "../../../public/VerticalDotsIcons";
+import { SetStateAction, useCallback, useRef, useState } from "react";
+import EditModal from "./EditModal";
+import DeleteModal from "./DeleteModal";
+import useFormHook from "./useFormHook";
+import NewModal from "./NewModal";
+
 type props = {
   formValues: (
     | {
@@ -21,113 +47,112 @@ type props = {
         type: string;
       }
   )[][];
-  labels: string[];
+  newValues: {
+    key: number;
+    _id: mongoose.Types.ObjectId;
+    author: string | undefined;
+    nameBook: string | undefined;
+    quantity: number | undefined;
+  }[]; // any so we can make this component universal
+  labels: {
+    key: string;
+    label: string;
+  }[];
 };
+
 /**
  *  Universal form.
+ * Note: for this to be universal i need to handle submit outside this component.
  * @param props Values from state from parent component.
  * @returns UniForm component.
  */
 export default function UniForm(props: props) {
-  const pressedButton = useRef<string>();
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const inputs = document.querySelectorAll("input");
+  const {
+    books,
+    onOpen,
+    editValue,
+    setEditValue,
+    isOpen,
+    onOpenChange,
+    action,
+    renderCell,
+    openModalAndSetEdit,
+    handleAction,
+    openModalAndSetNew,
+  } = useFormHook(props);
 
-    inputs.forEach((input) => {
-      // If the input value is empty, set it to the placeholder value
-      if (input.value.trim() === "") {
-        input.value = input.placeholder;
-      }
-    });
-
-    const formData = new FormData(event.currentTarget);
-    const action = formData.get("action");
-
-    const author = formData.get("author");
-    const sum = formData.get("val");
-    const bookName = formData.get("bookName");
-    const bookID = formData.get("id");
-    alert(
-      JSON.stringify(pressedButton.current) +
-        " " +
-        JSON.stringify(sum) +
-        " " +
-        JSON.stringify(bookName) +
-        " " +
-        JSON.stringify(bookID) +
-        " "
-    );
-
-    if (pressedButton.current === "update") {
-      await fetch("/api/books", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ bookID, author, name: bookName, val: sum }),
-      });
-    } else if (pressedButton.current === "delete") {
-      await fetch("/api/books", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ bookID }),
-      });
-    }
-  };
   return (
     <div className="flex flex-col">
-      {props.formValues.map((input, index) => {
-        return (
-          <form
-            key={index}
-            onSubmit={handleSubmit}
-            className="flex flex-1 flex-row"
-          >
-            {input.map((input, index) => {
-              return (
-                <Input
-                  readOnly={index === 0 ? true : false}
-                  key={index}
-                  className="flex-4"
-                  name={input.name}
-                  labelPlacement="outside"
-                  placeholder={input.value?.toString()}
-                  color="default"
-                />
-              );
-            })}
-            <Button
-              onClick={() => {
-                pressedButton.current = "update";
-              }}
-              id="action"
-              name="action"
-              value="update"
-              type="submit"
-              className="flex-2"
-              color="success"
-            >
-              Save
-            </Button>
-            <Button
-              onClick={() => {
-                pressedButton.current = "delete";
-                props.formValues.splice(index, 1);
-              }}
-              name="action"
-              value="delete"
-              className="flex-5"
-              color="danger"
-              type="submit"
-            >
-              Delete
-            </Button>
-          </form>
-        );
-      })}
+      <Table
+        onRowAction={(key) => openModalAndSetEdit(key as number)}
+        aria-label="Example table with dynamic content"
+      >
+        <TableHeader columns={props.labels}>
+          {(column) => (
+            <TableColumn allowsSorting key={column.key}>
+              {column.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={books}>
+          {(item) => (
+            <TableRow key={item.key}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey, item.key)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <>
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            editValue;
+          }}
+          onOpenChange={onOpenChange}
+        >
+          <ModalContent>
+            {(onClose) => {
+              switch (action.current) {
+                case "update": {
+                  return (
+                    <EditModal
+                      editValue={editValue}
+                      handleAction={handleAction}
+                      setEditValue={setEditValue}
+                      onClose={onClose}
+                    ></EditModal>
+                  );
+                }
+                case "delete": {
+                  return (
+                    <DeleteModal
+                      bookID={editValue?._id}
+                      bookName={editValue?.nameBook}
+                      handleAction={handleAction}
+                      onClose={onClose}
+                    />
+                  );
+                }
+                case "new": {
+                  return <NewModal onClose={onClose} />;
+                }
+              }
+            }}
+          </ModalContent>
+        </Modal>
+        <Button
+          onClick={() => openModalAndSetNew()}
+          type="button"
+          name="action"
+          value="delete"
+          className="m-2 self-end max-w-[200px]"
+          color="primary"
+        >
+          + Add new item
+        </Button>
+      </>
     </div>
   );
 }
