@@ -47,7 +47,7 @@ export default function NavBarComponent() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
+          <p className="text-blue-500">Login</p>
         </NavbarItem>
       </NavbarContent>
     </Navbar>
