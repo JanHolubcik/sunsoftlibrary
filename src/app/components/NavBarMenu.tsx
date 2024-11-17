@@ -1,41 +1,54 @@
+"use client";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
   Link,
-  Input,
-  DropdownItem,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  Avatar,
 } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 
-export default function NavBarMenu() {
+export default function NavBarComponent() {
+  const pathname = usePathname();
   return (
-    <Navbar isBordered>
-      <NavbarContent justify="start">
-        <NavbarBrand className="mr-4">
-          <p className="hidden sm:block font-bold text-inherit">ACME</p>
-        </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
+    <Navbar>
+      <NavbarBrand>
+        <p className="font-bold text-inherit">
+          <Link color="foreground" href="/">
+            SUNSOFT LIBRARY
+          </Link>
+        </p>
+      </NavbarBrand>
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <Link
+            color={pathname === "/books" ? "primary" : "foreground"}
+            href="/books"
+          >
+            Books
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/users"}>
+          <Link
+            color={pathname === "/users" ? "primary" : "foreground"}
+            href="/users"
+          >
+            Users
+          </Link>
+        </NavbarItem>
+        <NavbarItem isActive={pathname === "/bookloans"}>
+          <Link
+            color={pathname === "/bookloans" ? "primary" : "foreground"}
+            href="/bookloans"
+          >
+            Book loans
+          </Link>
+        </NavbarItem>
+      </NavbarContent>
+      <NavbarContent justify="end">
+        <NavbarItem className="hidden lg:flex">
+          <Link href="#">Login</Link>
+        </NavbarItem>
       </NavbarContent>
     </Navbar>
   );

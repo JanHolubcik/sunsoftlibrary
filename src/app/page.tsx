@@ -22,23 +22,49 @@ export default async function Home() {
   };
   await connectDB();
   return (
-    <main className="dark  flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex justify-evenly m-1">
-        <div className="w-36 self-center flex-4 ">
-          <p>Height: cm</p>
-        </div>
-        <div className=" self-center flex-4">
-          <Button
-            className="bg-transparent border-none"
-            size="sm"
-            variant="ghost"
-            isIconOnly
-          >
-            <div className="w-36 self-center flex-4 ">
-              <p>Height: cm</p>
-            </div>
-          </Button>
-        </div>
+    <main className="dark  flex min-h-screen flex-col items-center justify-between p-24 pt-12">
+      <div className="flex max-w-lg flex-col justify-evenly m-1">
+        <Image
+          className="flex self-center"
+          alt="Cute owl"
+          height={200}
+          src="/cuteowl.png"
+          width={200}
+        />
+        <section className="flex flex-col" id="hero">
+          <h1 className="m-3 self-center font-bold mt-8 text-3xl ">
+            Welcome to Our Library
+          </h1>
+          <h2 className="m-3 font-bold self-center">
+            Explore a world of knowledge and inspiration.
+          </h2>
+        </section>
+
+        <section id="about-library">
+          <h2 className="font-bold text-xl font-s m-1">About Our Library</h2>
+          <p className=" ml-1 mt-1">
+            Our library is a welcoming community hub where knowledge,
+            inspiration, and culture meet.
+          </p>
+          <p className=" ml-1 mt-1">
+            We offer an extensive collection of books, digital resources, and
+            programs for all age groups.
+          </p>
+          <p className=" ml-1 mt-1">
+            Whether you're here to research, read, or attend one of our
+            workshops, we strive to foster a space that encourages learning and
+            connection.
+          </p>
+        </section>
+
+        <section id="location">
+          <h2 className="font-bold m-1 text-xl">Our Location</h2>
+          <p className=" ml-1 mt-1">Visit us at:</p>
+          <p className=" ml-1 ">123 Library Street, Knowledge City, ABC 4567</p>
+          <p className=" ml-1 ">
+            We are open Monday through Saturday from 9:00 AM to 6:00 PM.
+          </p>
+        </section>
       </div>
     </main>
   );

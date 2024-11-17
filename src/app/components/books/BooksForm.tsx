@@ -96,7 +96,7 @@ export default function BooksForm(props: props) {
         </TableHeader>
         <TableBody items={books}>
           {(item) => (
-            <TableRow key={item.key}>
+            <TableRow className="to-blue-950" key={item.key}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey, item.key)}</TableCell>
               )}

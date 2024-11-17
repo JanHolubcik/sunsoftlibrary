@@ -61,7 +61,6 @@ export default function BooksLoanForm(props: props) {
 
   return (
     <div className="flex flex-col">
-      <p>Hello</p>
       <Table
         onRowAction={(key) => openModalAndSetEdit(key as number)}
         aria-label="Example table with dynamic content"
@@ -108,7 +107,7 @@ export default function BooksLoanForm(props: props) {
                   return (
                     <DeleteModal
                       bookID={editValue?._id}
-                      bookName={editValue?.nameBook}
+                      bookName={editValue?.bookInfo.bookName}
                       handleAction={handleAction}
                       onClose={onClose}
                     />

@@ -18,9 +18,9 @@ import {
   },
 })
 class BookLoansClass {
-  @prop({ required: [true, "Id of book is required"], unique: true })
+  @prop({ required: [true, "Id of book is required"], unique: false })
   bookID?: mongoose.Types.ObjectId;
-  @prop({ required: [true, "Book name is required"], unique: true })
+  @prop({ required: [true, "Book name is required"], unique: false })
   userID?: string;
   @prop({ required: true })
   sum?: number;
