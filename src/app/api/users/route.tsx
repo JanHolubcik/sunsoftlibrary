@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     newRecord,
     userPassword,
   } = await req.json();
-  debugger;
+
   if (!surname || !name || !IDnumber || !userEmail || !dateOfBirth) {
     return Response.json(
       { error: "Missing required fields!" },

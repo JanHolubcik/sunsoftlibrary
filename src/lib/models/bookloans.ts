@@ -11,7 +11,7 @@ import {
 @ModelOptions({
   schemaOptions: {
     timestamps: true,
-    collection: "users",
+    collection: "bookLoans",
   },
   options: {
     allowMixed: Severity.ALLOW,
@@ -19,13 +19,17 @@ import {
 })
 class BookLoansClass {
   @prop({ required: [true, "Id of book is required"], unique: true })
-  bookID?: string;
+  bookID?: mongoose.Types.ObjectId;
   @prop({ required: [true, "Book name is required"], unique: true })
   userID?: string;
   @prop({ required: true })
   sum?: number;
+  @prop({ required: true })
+  dateFrom?: Date;
+  @prop({ required: false })
+  dateTo?: Date;
 }
 
-const booksLoan = getModelForClass(BookLoansClass);
+const BooksLoans = getModelForClass(BookLoansClass);
 
-export { booksLoan, BookLoansClass };
+export { BooksLoans, BookLoansClass };

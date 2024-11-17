@@ -27,8 +27,6 @@ export default function NewModal(props: props) {
   const [bookName, setBookName] = useState("");
 
   const saveRecord = async () => {
-    console.log(state);
-
     await fetch("/api/users", {
       method: "POST",
       headers: {

@@ -42,7 +42,6 @@ export default function NewModal(props: props) {
   };
 
   const editAuthorValue = (e: string) => {
-    //console.log(e);
     setBookName("");
     setAuthor(e);
     setState((prev) => {
@@ -94,6 +93,13 @@ export default function NewModal(props: props) {
           options={suggestionsAuthor ? suggestionsAuthor : [""]}
           placeholder={"Search"}
           setEditValue={editAuthorValue}
+          handleSelection={handleSelection}
+        />
+        <h1 className="ml-2 font-bold">Book name</h1>
+        <AutoCompleteInput
+          options={suggestionsBookName ? suggestionsBookName : [""]}
+          placeholder={"Search"}
+          setEditValue={editBookNameValue}
           handleSelection={handleSelection}
         />
         <h1 className="ml-2 font-bold">Book name</h1>
