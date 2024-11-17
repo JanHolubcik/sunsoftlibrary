@@ -1,4 +1,4 @@
-import { BooksLoans } from "@/src/lib/models/bookLoans";
+import { BooksLoans } from "@/src/lib/models/bookloans";
 import { Books, BooksClass } from "@/src/lib/models/books";
 import { Users } from "@/src/lib/models/users";
 import connectDB from "@/src/lib/mongodb";
