@@ -45,7 +45,7 @@ export const dynamic = "force-dynamic";
  * @returns Users component.
  */
 export default async function Users() {
-  const data = await fetch(process.env.url + "/api/users", {
+  const data = await fetch(process.env.URL + "/api/users", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

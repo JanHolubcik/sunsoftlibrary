@@ -48,7 +48,7 @@ export const dynamic = "force-dynamic";
  * @returns Books component.
  */
 export default async function BooksLoans() {
-  const data = await fetch(process.env.url + "/api/booksloan", {
+  const data = await fetch(process.env.URL + "/api/booksloan", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

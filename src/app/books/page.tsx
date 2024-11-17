@@ -50,7 +50,7 @@ export const dynamic = "force-dynamic";
  * @returns Books component.
  */
 export default async function Books() {
-  const data = await fetch(process.env.url + "/api/books", {
+  const data = await fetch(process.env.URL + "/api/books", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
