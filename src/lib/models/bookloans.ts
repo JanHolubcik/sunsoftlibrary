@@ -10,7 +10,6 @@ import {
 @index({ title: 1 })
 @ModelOptions({
   schemaOptions: {
-    _id: false,
     timestamps: true,
     collection: "users",
   },

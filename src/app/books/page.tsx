@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import Link from "next/link";
 import { BooksClass } from "@/src/lib/models/books";
-import UniForm from "../components/UniForm";
+import BooksForm from "../components/books/BooksForm";
 import { useEffect, useState } from "react";
 
 import { env } from "process";
@@ -80,7 +80,7 @@ export default async function Books() {
 
   return (
     <main className="dark  flex min-h-screen flex-col items-center justify-between p-12">
-      <UniForm formValues={values} newValues={valuesNew} labels={labels} />
+      <BooksForm formValues={values} newValues={valuesNew} labels={labels} />
     </main>
   );
 }

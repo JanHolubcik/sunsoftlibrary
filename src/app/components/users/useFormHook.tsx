@@ -13,30 +13,15 @@ import mongoose from "mongoose";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type props = {
-  formValues: (
-    | {
-        name: string;
-        value: mongoose.Types.ObjectId;
-        type: string;
-      }
-    | {
-        name: string;
-        value: string | undefined;
-        type: string;
-      }
-    | {
-        name: string;
-        value: number | undefined;
-        type: string;
-      }
-  )[][];
   newValues: {
-    key: number;
     _id: mongoose.Types.ObjectId;
-    author: string | undefined;
-    nameBook: string | undefined;
-    quantity: number | undefined;
-  }[]; // any so we can make this component universal
+    key: number;
+    name: string | undefined;
+    surname: string | undefined;
+    dateOfBirth: Date | undefined;
+    IDnumber: string | undefined;
+    userEmail: string | undefined;
+  }[];
   labels: {
     key: string;
     label: string;
@@ -44,11 +29,13 @@ type props = {
 };
 
 type edit = {
-  key: number;
   _id: mongoose.Types.ObjectId;
-  author: string | undefined;
-  nameBook: string | undefined;
-  quantity: number | undefined;
+  key: number;
+  name: string | undefined;
+  surname: string | undefined;
+  dateOfBirth: Date | undefined;
+  IDnumber: string | undefined;
+  userEmail: string | undefined;
 };
 
 export default function useFormHook(props: props) {
@@ -60,25 +47,21 @@ export default function useFormHook(props: props) {
   const handleAction = async (action: "new" | "update" | "delete") => {
     switch (action) {
       case "update": {
-        await fetch("/api/books", {
+        await fetch("/api/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            bookID: editValue?._id,
-            author: editValue?.author,
-            name: editValue?.nameBook,
-            val: editValue?.quantity,
+            _id: editValue?._id,
+            name: editValue?.name,
+            surname: editValue?.surname,
+            dateOfBirth: editValue?.dateOfBirth,
+            IDnumber: editValue?.IDnumber,
+            userEmail: editValue?.userEmail,
           }),
         });
-        setEditValue({
-          key: -1,
-          _id: books[0]._id,
-          author: "",
-          nameBook: "",
-          quantity: -1,
-        });
+        debugger;
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && (newState[editValue?.key] = { ...editValue });
@@ -87,12 +70,17 @@ export default function useFormHook(props: props) {
         break;
       }
       case "delete": {
-        await fetch("/api/books", {
+        await fetch("/api/users", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ bookID: editValue?._id }),
+          body: JSON.stringify({ IDnumber: editValue?.IDnumber }),
+        });
+        setBooks((prev) => {
+          const newState = [...prev];
+          editValue?.key && newState.splice(editValue?.key);
+          return newState;
         });
       }
     }
@@ -120,7 +108,7 @@ export default function useFormHook(props: props) {
     const cellValue = book[columnKey];
 
     switch (columnKey) {
-      case "author":
+      case "name":
         return (
           <>
             <User
@@ -129,13 +117,19 @@ export default function useFormHook(props: props) {
             ></User>
           </>
         );
-      case "nameBook":
+      case "surname":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "quantity":
+      case "idNumber":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+      case "date":
         return (
           <p className="relative flex justify-center items-center gap-2">
             {cellValue}

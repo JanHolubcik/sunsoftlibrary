@@ -6,13 +6,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@internationalized/date": "^3.5.6",
     "@nextui-org/react": "^2.4.8",
+    "@react-aria/i18n": "^3.12.3",
     "@typegoose/typegoose": "^12.9.0",
     "framer-motion": "^11.11.17",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
     "next": "latest",
     "react": "^18",
+    "react-datepicker": "^7.5.0",
     "react-dom": "^18"
   },
   "devDependencies": {

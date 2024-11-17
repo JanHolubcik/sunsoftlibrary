@@ -71,7 +71,7 @@ export async function POST(req: Request) {
   await connectDB();
   try {
     if (!newRecord && bookID) {
-      await Books.findOneAndUpdate(
+      const xd = await Books.findOneAndUpdate(
         { _id: bookID },
         { $set: { author: author, bookName: name, sum: val } }
       );

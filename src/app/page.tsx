@@ -2,7 +2,7 @@ import Image from "next/image";
 import { testDatabaseConnection } from "./actions";
 import Link from "next/link";
 import "./../styles/globals.css";
-import UniForm from "./components/UniForm";
+import UniForm from "./components/books/BooksForm";
 import BooksComponent from "./books/page";
 import { useEffect, useState } from "react";
 import connectDB from "../lib/mongodb";

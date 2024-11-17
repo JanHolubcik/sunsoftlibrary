@@ -9,14 +9,6 @@ import mongoose from "mongoose";
 
 import { SetStateAction } from "react";
 
-type edit = {
-  key: number;
-  _id: mongoose.Types.ObjectId;
-  author: string | undefined;
-  nameBook: string | undefined;
-  quantity: number | undefined;
-};
-
 type props = {
   bookID: mongoose.Types.ObjectId | undefined;
   bookName: string | undefined;
@@ -43,7 +35,7 @@ export default function DeleteModal(props: props) {
           className="flex-2 m-1"
           color="danger"
           onPress={() => {
-            props.handleAction("update");
+            props.handleAction("delete");
             props.onClose();
           }}
         >

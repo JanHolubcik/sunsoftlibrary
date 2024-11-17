@@ -8,8 +8,8 @@ import {
 import mongoose from "mongoose";
 
 import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
-import AutoCompleteInput from "./AutoComplete";
-import { books } from "../types/types";
+import AutoCompleteInput from "../AutoComplete";
+import { books } from "../../types/types";
 
 type edit = {
   key: number;
@@ -50,7 +50,7 @@ export default function EditModal(props: props) {
         ).then((res) => {
           return res.json();
         });
-        console.log(data);
+
         author && setSuggestionAuthor(data);
         bookName && setSuggestionBookName(data);
       };

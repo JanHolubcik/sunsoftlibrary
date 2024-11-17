@@ -2,6 +2,7 @@ import {
   getModelForClass,
   index,
   ModelOptions,
+  mongoose,
   prop,
   Severity,
 } from "@typegoose/typegoose";
@@ -17,17 +18,18 @@ import {
   },
 })
 class UsersClass {
+  _id!: mongoose.Types.ObjectId;
   @prop({ required: [true, "Name is required"], unique: true })
   name?: string;
   @prop({ required: [true, "Surname is required"] })
   surname?: string;
-  @prop({ required: [true, "Surname is required"] })
-  IDnumber?: string;
   @prop({
-    required: [true, "Email is required"],
+    required: [true, "ID is required"],
     unique: true,
     match: [/^[A-Za-z]{2}[0-9]{6}$/, "ID number is invalid!"],
   })
+  IDnumber?: string;
+  @prop({ required: false })
   userPassword?: string;
   @prop({
     required: [false, "Email is required"],

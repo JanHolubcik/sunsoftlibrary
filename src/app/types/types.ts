@@ -18,3 +18,13 @@ export type typeLabels = {
   key: string;
   label: string;
 }[];
+
+export type users = {
+  _id: mongoose.Types.ObjectId;
+  name?: string | undefined;
+  surname?: string | undefined;
+  IDnumber?: string | undefined;
+  userPassword?: string | undefined;
+  userEmail?: string | undefined;
+  dateOfBirth?: Date | undefined;
+}[];

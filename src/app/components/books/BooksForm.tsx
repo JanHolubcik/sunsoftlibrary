@@ -21,8 +21,8 @@ import {
   useDisclosure,
   User,
 } from "@nextui-org/react";
-import { EditIcon } from "../../../public/EditIcon";
-import { VerticalDotsIcon } from "../../../public/VerticalDotsIcons";
+import { EditIcon } from "../../../../public/EditIcon";
+import { VerticalDotsIcon } from "../../../../public/VerticalDotsIcons";
 import { SetStateAction, useCallback, useRef, useState } from "react";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
@@ -66,7 +66,7 @@ type props = {
  * @param props Values from state from parent component.
  * @returns UniForm component.
  */
-export default function UniForm(props: props) {
+export default function BooksForm(props: props) {
   const {
     books,
     onOpen,

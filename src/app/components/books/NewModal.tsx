@@ -6,7 +6,7 @@ import {
   Input,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import AutoCompleteInput from "./AutoComplete";
+import AutoCompleteInput from "../AutoComplete";
 
 type props = {
   onClose: () => void;
@@ -25,10 +25,8 @@ export default function NewModal(props: props) {
   const [suggestionsBookName, setSuggestionBookName] = useState();
   const [author, setAuthor] = useState("");
   const [bookName, setBookName] = useState("");
-  console.log(state.author);
-  const saveRecord = async () => {
-    console.log(state);
 
+  const saveRecord = async () => {
     await fetch("/api/books", {
       method: "POST",
       headers: {
