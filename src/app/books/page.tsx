@@ -44,21 +44,22 @@ const columns = [
     label: "STATUS",
   },
 ];
-
+export const dynamic = "force-dynamic";
 /**
  *
  * @returns Books component.
  */
 export default async function Books() {
-  const res: books = await fetch(process.env.url + "/api/books", {
+  const data = await fetch(process.env.url + "/api/books", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    return res.json();
   });
-
+  let res: books = await data.json();
+  if (!res) {
+    return { notfound: true };
+  }
   const values = res.map((val) => {
     return [
       { name: "id", value: val._id, type: "string" },

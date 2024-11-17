@@ -39,23 +39,22 @@ const labels: typeLabels = [
     label: "ACTIONS",
   },
 ];
-
+export const dynamic = "force-dynamic";
 /**
  *
  * @returns Users component.
  */
 export default async function Users() {
-  const res: users = await fetch(process.env.url + "/api/users", {
+  const data = await fetch(process.env.url + "/api/users", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    const data = res.json();
-
-    return data;
   });
-
+  let res: users = await data.json();
+  if (!res) {
+    return { notfound: true };
+  }
   const valuesNew = res.map((val, index) => {
     return {
       _id: val._id,

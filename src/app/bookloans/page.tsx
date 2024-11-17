@@ -42,21 +42,22 @@ const labels: typeLabels = [
     label: "ACTIONS",
   },
 ];
-
+export const dynamic = "force-dynamic";
 /**
  *
  * @returns Books component.
  */
 export default async function BooksLoans() {
-  const res: bookLoan = await fetch(process.env.url + "/api/booksloan", {
+  const data = await fetch(process.env.url + "/api/booksloan", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    return res.json();
   });
-
+  let res: bookLoan = await data.json();
+  if (!res) {
+    return { notfound: true };
+  }
   const valuesNew = res.map((val, index) => {
     return {
       ...val,
