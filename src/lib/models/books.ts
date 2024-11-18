@@ -19,11 +19,11 @@ import {
 })
 class BooksClass {
   _id!: mongoose.Types.ObjectId;
-  @prop({ required: [true, "Book name is required"], unique: true })
+  @prop({ required: [true, "Book name is required"] })
   bookName?: string;
   @prop({ required: [true, "Author is required"] })
   author?: string;
-  @prop({ required: true, default: 0 })
+  @prop({ required: true, min: 0 })
   sum?: number;
 }
 

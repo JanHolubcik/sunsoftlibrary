@@ -13,12 +13,37 @@ type ResponseData = {
 export async function GET(req: NextRequest) {
   // Get data from your database
   const userSuggestion = req.nextUrl.searchParams.get("user");
+  const findBook = req.nextUrl.searchParams.get("findBook");
   const bookNameSuggestion = req.nextUrl.searchParams.get("bookName");
   const suggestion = req.nextUrl.searchParams.get("suggestion");
   await connectDB();
   try {
     //  const bookLoans = await BooksLoans.find({}).lean().exec();
 
+    if (findBook) {
+      const books = await Books.findOne({
+        bookName: findBook,
+      }).lean();
+      console.log(books);
+      if (books) {
+        const Loan = await BooksLoans.findOne({
+          bookID: books._id,
+          dateTo: { $exists: false },
+        }).lean();
+        console.log(Loan);
+        if (Loan) {
+          const user = await Users.findOne({
+            IDnumber: Loan.userID,
+          }).lean();
+          console.log(user);
+          return Response.json(user);
+        } else {
+          return Response.json({});
+        }
+      } else {
+        return Response.json({});
+      }
+    }
     if (userSuggestion) {
       const users = await Users.find({
         name: { $regex: ".*" + userSuggestion + ".*", $options: "i" },

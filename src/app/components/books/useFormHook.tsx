@@ -56,10 +56,12 @@ export default function useFormHook(props: props) {
   const [books, setBooks] = useState(props.newValues);
   const [editValue, setEditValue] = useState<edit>();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const action = useRef<"update" | "delete" | "new">();
+  const action = useRef<"update" | "delete" | "new" | "look">();
+
+  const FindWhoHasThisBorrowed = async () => {};
 
   const handleAction = async (
-    action: "new" | "update" | "delete",
+    action: "new" | "update" | "delete" | "look",
     newBook?: edit
   ) => {
     switch (action) {
@@ -76,13 +78,14 @@ export default function useFormHook(props: props) {
             val: editValue?.quantity,
           }),
         });
-        setEditValue({
-          key: -1,
-          _id: books[0]._id,
-          author: "",
-          nameBook: "",
-          quantity: -1,
-        });
+        if (editValue?.key === 0) {
+          //first row was not being updated, i have no idea why this should fix it for a while
+          setBooks((prev) => {
+            const newState = [...prev];
+            editValue && (newState[0] = { ...editValue });
+            return newState;
+          });
+        }
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && (newState[editValue?.key] = { ...editValue });
@@ -103,17 +106,11 @@ export default function useFormHook(props: props) {
           editValue?.key && newState.splice(editValue?.key);
           return newState;
         });
+        break;
       }
       case "new": {
-        if (newBook) {
-          newBook.key = books.length;
-        }
-        console.log("adding to state: " + JSON.stringify(newBook));
-        setBooks((prev) => {
-          const newState = [...prev];
-          newBook && newState.push(newBook);
-          return newState;
-        });
+      }
+      case "look": {
       }
     }
   };
@@ -131,7 +128,13 @@ export default function useFormHook(props: props) {
   };
 
   const openModalAndSetNew = () => {
-    action.current = "new";
+    action.current = "look";
+
+    onOpen();
+  };
+
+  const openModalAndSearch = () => {
+    action.current = "look";
 
     onOpen();
   };
@@ -206,5 +209,6 @@ export default function useFormHook(props: props) {
     openModalAndSetEdit,
     handleAction,
     openModalAndSetNew,
+    openModalAndSearch,
   };
 }

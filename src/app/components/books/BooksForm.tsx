@@ -28,6 +28,7 @@ import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 import useFormHook from "./useFormHook";
 import NewModal from "./NewModal";
+import LookModal from "./LookModal";
 
 type props = {
   formValues: (
@@ -75,6 +76,7 @@ export default function BooksForm(props: props) {
     isOpen,
     onOpenChange,
     action,
+    openModalAndSearch,
     renderCell,
     openModalAndSetEdit,
     handleAction,
@@ -140,20 +142,37 @@ export default function BooksForm(props: props) {
                     <NewModal handleAction={handleAction} onClose={onClose} />
                   );
                 }
+                case "look": {
+                  return (
+                    <LookModal handleAction={handleAction} onClose={onClose} />
+                  );
+                }
               }
             }}
           </ModalContent>
         </Modal>
-        <Button
-          onClick={() => openModalAndSetNew()}
-          type="button"
-          name="action"
-          value="delete"
-          className="m-2 self-end max-w-[200px]"
-          color="primary"
-        >
-          + Add new item
-        </Button>
+        <div className=" flex flex-row m-2 self-end">
+          <Button
+            onClick={() => openModalAndSetNew()}
+            type="button"
+            name="action"
+            value="delete"
+            color="primary"
+            className="max-w-[200px] mr-5"
+          >
+            + Add new item
+          </Button>
+          <Button
+            onClick={() => openModalAndSearch()}
+            type="button"
+            name="action"
+            value="delete"
+            color="secondary"
+            className="max-w-[200px]"
+          >
+            Find who borrowed book
+          </Button>
+        </div>
       </>
     </div>
   );

@@ -36,6 +36,7 @@ export default function NewModal(props: props) {
     bookName: "",
     quantity: 0,
   });
+  const [error, setError] = useState("");
   const [suggestionsAuthor, setSuggestionAuthor] = useState();
   const [suggestionsBookName, setSuggestionBookName] = useState();
   const [author, setAuthor] = useState("");
@@ -144,6 +145,7 @@ export default function NewModal(props: props) {
             })
           }
         />
+        <p className="ml-1 mr-1 text-red-600">{error}</p>
       </ModalBody>
       <ModalFooter>
         <Button color="danger" variant="light" onPress={props.onClose}>
@@ -154,10 +156,21 @@ export default function NewModal(props: props) {
           className="flex-2 m-1"
           color="primary"
           onPress={async () => {
-            const newBook = await saveRecord();
+            if (
+              state?.author &&
+              state?.bookName &&
+              state?.quantity &&
+              state.author.length > 1 &&
+              state?.bookName?.length > 1 &&
+              state?.quantity > -1
+            ) {
+              const newBook = await saveRecord();
 
-            props.handleAction("new", newBook);
-            props.onClose();
+              props.handleAction("new", newBook);
+              props.onClose();
+            } else {
+              setError("Values are not correctly filled out!");
+            }
           }}
         >
           Save new record

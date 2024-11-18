@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import debounce from "lodash/debounce";
+import { Input } from "@nextui-org/react";
 
 interface IPropType {
   options: string[];
@@ -62,9 +63,9 @@ const AutoCompleteInput = (props: IPropType) => {
 
   return (
     <div className="relative">
-      <input
+      <Input
         ref={inputRef}
-        className="w-full border border-dark  transition-all duration-300 rounded-md px-4 py-3 focus:outline-none"
+        className="bg-zinc-800 ml-1 mr-1  rounded-xl w-full border-none focus:border-none border-1"
         type="text"
         placeholder={
           props.placeholder ? props.placeholder : "Type to search..."
@@ -78,7 +79,7 @@ const AutoCompleteInput = (props: IPropType) => {
         }}
       />
       {!isSuggestionEmpty() && value.length > 2 && suggestions.length > 0 && (
-        <ul className="bg-white border-blue-500 border-2 rounded hover:cursor-pointer absolute top-14 w-full z-20 max-h-64 overflow-y-auto">
+        <ul className="bg-white border-blue-500 border-2 rounded hover:cursor-pointer absolute top-10 w-full z-20 max-h-64 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}

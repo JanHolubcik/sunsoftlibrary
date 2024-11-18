@@ -31,7 +31,7 @@ export default function EditModal(props: props) {
   const [suggestionsBookName, setSuggestionBookName] = useState();
   const [author, setAuthor] = useState("");
   const [bookName, setBookName] = useState("");
-
+  const [error, setError] = useState("");
   const handleSelection = async (selectedOption: string) => {
     console.log({ Selected: { selectedOption } });
   };
@@ -116,6 +116,7 @@ export default function EditModal(props: props) {
             })
           }
         />
+        <p className="ml-1 mr-1 text-red-600">{error}</p>
       </ModalBody>
       <ModalFooter>
         <Button color="danger" variant="light" onPress={props.onClose}>
@@ -126,8 +127,20 @@ export default function EditModal(props: props) {
           className="flex-2 m-1"
           color="primary"
           onPress={() => {
-            props.handleAction("update");
-            props.onClose();
+            if (
+              props.editValue?.author &&
+              props.editValue?.nameBook &&
+              props.editValue?.quantity &&
+              props.editValue.author.length > 1 &&
+              props.editValue?.nameBook?.length > 1 &&
+              props.editValue?.quantity > -1
+            ) {
+              setError("");
+              props.handleAction("update");
+              props.onClose();
+            } else {
+              setError("Values are not correctly filled out!");
+            }
           }}
         >
           Save

@@ -22,7 +22,7 @@ class BookLoansClass {
   bookID?: mongoose.Types.ObjectId;
   @prop({ required: [true, "Book name is required"], unique: false })
   userID?: string;
-  @prop({ required: true })
+  @prop({ required: true, min: 0 })
   sum?: number;
   @prop({ required: true })
   dateFrom?: Date;
