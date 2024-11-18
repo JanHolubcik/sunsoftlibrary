@@ -7,12 +7,20 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import AutoCompleteInput from "../AutoComplete";
-import { books, booksObject, users, usersObject } from "../../types/types";
+import {
+  bookLoan,
+  bookLoanObject,
+  books,
+  booksObject,
+  users,
+  usersObject,
+} from "../../types/types";
 import AutoCompleteInputLoan from "./AutoCompleteInputLoan";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 type props = {
   onClose: () => void;
+  handleAction: (action: "new" | "update" | "delete") => Promise<void>;
 };
 
 export default function NewModal(props: props) {
@@ -26,20 +34,18 @@ export default function NewModal(props: props) {
     dateFrom: new Date(),
     dateTo: null,
   });
-  const [book, setBook] = useState<booksObject>();
+  const [book, setBook] = useState<bookLoanObject>();
   const [userOB, setUserOB] = useState<usersObject>();
   const [suggestionUser, setSuggestionUser] = useState<users>();
-  const [suggestionsBookName, setSuggestionBookName] = useState<books>();
+  const [suggestionsBookName, setSuggestionBookName] = useState<bookLoan>();
   const [user, setSetUser] = useState("");
   const [bookName, setBookName] = useState("");
 
   const handleSelectionBook = (index: number) => {
     suggestionsBookName && setBook(suggestionsBookName[index]);
-    suggestionsBookName && console.log(suggestionsBookName[index]);
   };
   const handleSuggestionUser = (index: number) => {
     suggestionUser && setUserOB(suggestionUser[index]);
-    suggestionUser && console.log(suggestionUser[index]);
   };
 
   const saveRecord = async () => {
@@ -125,6 +131,7 @@ export default function NewModal(props: props) {
           options={
             suggestionsBookName
               ? suggestionsBookName.map((val) => {
+                  //@ts-ignore
                   return { option: val.bookName, _id: val._id };
                 })
               : []
@@ -171,8 +178,9 @@ export default function NewModal(props: props) {
           type="button"
           className="flex-2 m-1"
           color="primary"
-          onPress={() => {
-            saveRecord();
+          onPress={async () => {
+            await saveRecord();
+            await props.handleAction("new");
             props.onClose();
           }}
         >

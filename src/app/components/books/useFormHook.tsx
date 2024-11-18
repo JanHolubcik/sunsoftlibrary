@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import mongoose from "mongoose";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { booksObject } from "../../types/types";
 
 type props = {
   formValues: (
@@ -57,7 +58,10 @@ export default function useFormHook(props: props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const action = useRef<"update" | "delete" | "new">();
 
-  const handleAction = async (action: "new" | "update" | "delete") => {
+  const handleAction = async (
+    action: "new" | "update" | "delete",
+    newBook?: edit
+  ) => {
     switch (action) {
       case "update": {
         await fetch("/api/books", {
@@ -97,6 +101,17 @@ export default function useFormHook(props: props) {
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && newState.splice(editValue?.key);
+          return newState;
+        });
+      }
+      case "new": {
+        if (newBook) {
+          newBook.key = books.length;
+        }
+        console.log("adding to state: " + JSON.stringify(newBook));
+        setBooks((prev) => {
+          const newState = [...prev];
+          newBook && newState.push(newBook);
           return newState;
         });
       }

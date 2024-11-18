@@ -8,11 +8,25 @@ import {
 import { useEffect, useState } from "react";
 import AutoCompleteInput from "../AutoComplete";
 import DatePicker from "react-datepicker";
+import mongoose from "mongoose";
 
 type props = {
   onClose: () => void;
+  handleAction: (
+    action: "new" | "update" | "delete",
+    newBook: edit
+  ) => Promise<void>;
 };
 
+type edit = {
+  _id: mongoose.Types.ObjectId;
+  key: number;
+  name: string | undefined;
+  surname: string | undefined;
+  dateOfBirth: Date | undefined;
+  IDnumber: string | undefined;
+  userEmail: string | undefined;
+};
 export default function NewModal(props: props) {
   const [state, setState] = useState({
     name: "",
@@ -21,13 +35,9 @@ export default function NewModal(props: props) {
     IDnumber: "",
     userEmail: "",
   });
-  const [suggestionsAuthor, setSuggestionAuthor] = useState();
-  const [suggestionsBookName, setSuggestionBookName] = useState();
-  const [author, setAuthor] = useState("");
-  const [bookName, setBookName] = useState("");
 
   const saveRecord = async () => {
-    await fetch("/api/users", {
+    const data = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,10 +47,21 @@ export default function NewModal(props: props) {
         IDnumber: state.IDnumber,
         name: state?.name,
         surname: state?.surname,
-        dateOfBirth: state?.dateOfBirth,
+        dateOfBirth: state?.dateOfBirth.toISOString(),
         userEmail: state?.userEmail,
       }),
-    }).catch((ERR) => console.log(ERR));
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((ERR) => {
+        console.log(ERR);
+      });
+
+    const returnVal = {
+      ...data,
+    };
+    return returnVal;
   };
 
   return (
@@ -138,8 +159,9 @@ export default function NewModal(props: props) {
           type="button"
           className="flex-2 m-1"
           color="primary"
-          onPress={() => {
-            saveRecord();
+          onPress={async () => {
+            const newData = await saveRecord();
+            props.handleAction("new", newData);
             props.onClose();
           }}
         >

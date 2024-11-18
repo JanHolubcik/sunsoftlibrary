@@ -44,6 +44,7 @@ export type bookLoan = {
 }[];
 
 export type booksObject = {
+  key: number;
   _id: mongoose.Types.ObjectId;
   bookName?: string | undefined;
   author?: string | undefined;

@@ -21,20 +21,35 @@ type props = {
   }[];
 };
 
-type edit = {
-  key: number;
-  _id: mongoose.Types.ObjectId;
-  author: string | undefined;
-  nameBook: string | undefined;
-  quantity: number | undefined;
-};
-
 export default function useFormHook(props: props) {
   const [books, setBooks] = useState(props.newValues);
   const [editValue, setEditValue] = useState<bookLoanObject>();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const action = useRef<"update" | "delete" | "new">();
 
+  // for bookloans im refetching the values when creating new
+  const refetch = async () => {
+    const data = await fetch("/api/booksloan", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let res: bookLoan = await data.json();
+
+    return res.map((val, index) => {
+      return {
+        ...val,
+        author: val.bookInfo.author,
+        nameBook: val.bookInfo.bookName,
+        username: val.userInfo.name + " " + val.userInfo.surname,
+        from: val.dateFrom,
+        quantity: val.sum,
+        to: val.dateTo,
+        key: index,
+      };
+    });
+  };
   const handleAction = async (action: "new" | "update" | "delete") => {
     switch (action) {
       case "update": {
@@ -80,6 +95,11 @@ export default function useFormHook(props: props) {
           editValue?.key && newState.splice(editValue?.key);
           return newState;
         });
+      }
+      case "new": {
+        const newVal = await refetch();
+        console.log(newVal);
+        setBooks(newVal);
       }
     }
   };

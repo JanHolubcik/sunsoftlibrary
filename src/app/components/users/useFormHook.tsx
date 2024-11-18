@@ -44,7 +44,10 @@ export default function useFormHook(props: props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const action = useRef<"update" | "delete" | "new">();
 
-  const handleAction = async (action: "new" | "update" | "delete") => {
+  const handleAction = async (
+    action: "new" | "update" | "delete",
+    newBook?: edit
+  ) => {
     switch (action) {
       case "update": {
         await fetch("/api/users", {
@@ -80,6 +83,18 @@ export default function useFormHook(props: props) {
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && newState.splice(editValue?.key);
+          return newState;
+        });
+      }
+      case "new": {
+        if (newBook) {
+          newBook.key = books.length;
+        }
+        console.log("adding to state: " + JSON.stringify(newBook));
+        console.log("odl: " + JSON.stringify(books[0]));
+        setBooks((prev) => {
+          const newState = [...prev];
+          newBook && newState.push(newBook);
           return newState;
         });
       }

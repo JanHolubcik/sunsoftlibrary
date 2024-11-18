@@ -136,7 +136,9 @@ export default function BooksForm(props: props) {
                   );
                 }
                 case "new": {
-                  return <NewModal onClose={onClose} />;
+                  return (
+                    <NewModal handleAction={handleAction} onClose={onClose} />
+                  );
                 }
               }
             }}

@@ -77,18 +77,17 @@ export async function POST(req: Request) {
       ).catch((err) => console.log(err));
     } else {
       console.log("Creating new record...");
-      await Users.insertMany({
+
+      const myDocument = new Users({
         name: name,
         surname: surname,
         userEmail: userEmail,
         dateOfBirth: dateOfBirth,
         IDnumber: IDnumber,
-      }).catch((err) => {
-        console.log(err);
-        return new Response("Couldn't create new record in users cluster.", {
-          status: 400,
-        });
       });
+      const newDoc = await myDocument.save();
+
+      return Response.json(newDoc);
     }
 
     return Response.json({ message: "Updating book was successful" });

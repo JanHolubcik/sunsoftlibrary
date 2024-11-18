@@ -114,7 +114,9 @@ export default function BooksLoanForm(props: props) {
                   );
                 }
                 case "new": {
-                  return <NewModal onClose={onClose} />;
+                  return (
+                    <NewModal handleAction={handleAction} onClose={onClose} />
+                  );
                 }
               }
             }}

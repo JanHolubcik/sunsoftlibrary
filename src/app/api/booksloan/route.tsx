@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   await connectDB();
   try {
     //  const bookLoans = await BooksLoans.find({}).lean().exec();
-    console.log(userSuggestion);
+
     if (userSuggestion) {
       const users = await Users.find({
         name: { $regex: ".*" + userSuggestion + ".*", $options: "i" },
@@ -116,7 +116,7 @@ export async function POST(req: Request) {
         await books.save();
       }
 
-      const xd = await BooksLoans.findOneAndUpdate(
+      await BooksLoans.findOneAndUpdate(
         { _id: _id },
         {
           $set: {
@@ -128,6 +128,7 @@ export async function POST(req: Request) {
           },
         }
       );
+
       return Response.json({ message: "Updating book loans was successful" });
     } else {
       console.log("Creating new record...");
@@ -153,12 +154,14 @@ export async function POST(req: Request) {
         await books.save();
       }
       console.log("Inserting loan..");
-      await BooksLoans.insertMany({
+
+      const myDocument = new BooksLoans({
         userID: userID,
         bookID: bookID,
         sum: sum,
         dateFrom: new Date(dateFrom),
-      }).catch((err) => console.log(err));
+      });
+      await myDocument.save();
     }
 
     return Response.json({ message: "Updating book loans was successful" });

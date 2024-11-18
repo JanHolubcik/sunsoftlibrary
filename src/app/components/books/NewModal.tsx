@@ -1,3 +1,4 @@
+"use client";
 import {
   ModalHeader,
   ModalBody,
@@ -5,11 +6,25 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AutoCompleteInput from "../AutoComplete";
+import { useRouter } from "next/navigation";
+import { booksObject } from "../../types/types";
+import mongoose from "mongoose";
 
+type edit = {
+  key: number;
+  _id: mongoose.Types.ObjectId;
+  author: string | undefined;
+  nameBook: string | undefined;
+  quantity: number | undefined;
+};
 type props = {
   onClose: () => void;
+  handleAction: (
+    action: "new" | "update" | "delete",
+    newBook: edit
+  ) => Promise<void>;
 };
 
 export default function NewModal(props: props) {
@@ -25,9 +40,10 @@ export default function NewModal(props: props) {
   const [suggestionsBookName, setSuggestionBookName] = useState();
   const [author, setAuthor] = useState("");
   const [bookName, setBookName] = useState("");
-
+  const router = useRouter();
+  const newBook = useRef<edit>();
   const saveRecord = async () => {
-    await fetch("/api/books", {
+    const newBookDB = await fetch("/api/books", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +54,19 @@ export default function NewModal(props: props) {
         val: state.quantity,
         newRecord: true,
       }),
-    }).catch((ERR) => console.log(ERR));
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((ERR) => {
+        console.log(ERR);
+      });
+    const returnVal = {
+      ...newBookDB,
+      nameBook: newBookDB.bookName,
+      quantity: newBookDB.sum,
+    };
+    return returnVal;
   };
 
   const editAuthorValue = (e: string) => {
@@ -102,13 +130,7 @@ export default function NewModal(props: props) {
           setEditValue={editBookNameValue}
           handleSelection={handleSelection}
         />
-        <h1 className="ml-2 font-bold">Book name</h1>
-        <AutoCompleteInput
-          options={suggestionsBookName ? suggestionsBookName : [""]}
-          placeholder={"Search"}
-          setEditValue={editBookNameValue}
-          handleSelection={handleSelection}
-        />
+
         <h1 className="ml-2 font-bold">Quantity</h1>
         <Input
           className="ml-1 mr-1"
@@ -131,8 +153,10 @@ export default function NewModal(props: props) {
           type="button"
           className="flex-2 m-1"
           color="primary"
-          onPress={() => {
-            saveRecord();
+          onPress={async () => {
+            const newBook = await saveRecord();
+
+            props.handleAction("new", newBook);
             props.onClose();
           }}
         >

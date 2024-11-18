@@ -82,6 +82,8 @@ export async function POST(req: Request) {
         bookName: name,
         sum: val,
       }).catch((err) => console.log(err));
+      const addedBook = await Books.findOne({ bookName: name }).lean();
+      return Response.json(addedBook);
     }
 
     return Response.json({ message: "Updating book was successful" });
