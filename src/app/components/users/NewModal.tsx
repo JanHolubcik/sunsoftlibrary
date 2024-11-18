@@ -35,7 +35,7 @@ export default function NewModal(props: props) {
     IDnumber: "",
     userEmail: "",
   });
-
+  const [error, setError] = useState("");
   const saveRecord = async () => {
     const data = await fetch("/api/users", {
       method: "POST",
@@ -149,6 +149,7 @@ export default function NewModal(props: props) {
               });
             }}
           />
+          <p className="ml-1 mr-1 text-red-600">{error}</p>
         </div>
       </ModalBody>
       <ModalFooter>
@@ -160,9 +161,28 @@ export default function NewModal(props: props) {
           className="flex-2 m-1"
           color="primary"
           onPress={async () => {
-            const newData = await saveRecord();
-            props.handleAction("new", newData);
-            props.onClose();
+            if (
+              state?.name &&
+              state?.userEmail &&
+              state?.surname &&
+              state?.dateOfBirth &&
+              state.userEmail.length > 1 &&
+              state?.surname?.length > 1 &&
+              state?.name.length > 1
+            ) {
+              const pattern =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+              if (pattern.test(state?.userEmail)) {
+                setError("");
+                const newData = await saveRecord();
+                props.handleAction("new", newData);
+                props.onClose();
+              } else {
+                setError("Email is incorrect");
+              }
+            } else {
+              setError("Values are not correctly filled out!");
+            }
           }}
         >
           Save new record

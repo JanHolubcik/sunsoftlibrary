@@ -9,7 +9,7 @@ import {
 import mongoose from "mongoose";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 
 import DatePicker, { CalendarContainer } from "react-datepicker";
 
@@ -31,6 +31,7 @@ type props = {
 };
 const data = ["One", "Two", "Three"];
 export default function EditModal(props: props) {
+  const [error, setError] = useState("");
   return (
     <>
       <ModalHeader className="flex flex-col gap-1">Edit View</ModalHeader>
@@ -100,6 +101,8 @@ export default function EditModal(props: props) {
               });
             }}
           />
+
+          <p className="ml-1 mr-1 text-red-600">{error}</p>
         </div>
       </ModalBody>
       <ModalFooter>
@@ -111,8 +114,27 @@ export default function EditModal(props: props) {
           className="flex-2 m-1 mb-5"
           color="primary"
           onPress={() => {
-            props.handleAction("update");
-            props.onClose();
+            if (
+              props.editValue?.name &&
+              props.editValue?.surname &&
+              props.editValue?.userEmail &&
+              props.editValue?.dateOfBirth &&
+              props.editValue.name.length > 1 &&
+              props.editValue?.surname?.length > 1 &&
+              props.editValue?.userEmail.length > 1
+            ) {
+              const pattern =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+              if (pattern.test(props.editValue?.userEmail)) {
+                setError("");
+                props.handleAction("update");
+                props.onClose();
+              } else {
+                setError("Email is incorrect");
+              }
+            } else {
+              setError("Values are not correctly filled out!");
+            }
           }}
         >
           Save
