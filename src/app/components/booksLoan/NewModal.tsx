@@ -180,7 +180,6 @@ export default function NewModal(props: props) {
           className="flex-2 m-1"
           color="primary"
           onPress={async () => {
-            debugger;
             if (
               book?.sum &&
               state?.dateFrom &&
@@ -193,7 +192,7 @@ export default function NewModal(props: props) {
               props.onClose();
             } else {
               if (userOB?.IDnumber && book?._id) {
-                setError("Values are wrongly filled");
+                setError("Quantity can't extend maximum.");
               } else {
                 setError("Borrower or book doesn't exists in database");
               }

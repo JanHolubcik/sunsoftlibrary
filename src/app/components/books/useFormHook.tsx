@@ -87,7 +87,6 @@ export default function useFormHook(props: props) {
     action: "new" | "update" | "delete" | "look",
     newBook?: edit
   ) => {
-    console.log("action: " + action);
     if (action === "new") {
       if (newBook) {
         newBook.key = books.length;
@@ -144,7 +143,7 @@ export default function useFormHook(props: props) {
   const openModalAndSetEdit = (key: number) => {
     newValues;
     action.current = "update";
-    console.log("update : " + JSON.stringify(books));
+
     setEditValue(books[key]);
     onOpen();
   };

@@ -44,7 +44,6 @@ export default function LookModal(props: props) {
       setError("No user was found");
       setUser(undefined);
     }
-    console.log({ Selected: { selectedOption } });
   };
 
   const [error, setError] = useState("");

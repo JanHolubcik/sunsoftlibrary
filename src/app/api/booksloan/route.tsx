@@ -24,18 +24,18 @@ export async function GET(req: NextRequest) {
       const books = await Books.findOne({
         bookName: findBook,
       }).lean();
-      console.log(books);
+
       if (books) {
         const Loan = await BooksLoans.findOne({
           bookID: books._id,
           dateTo: { $exists: false },
         }).lean();
-        console.log(Loan);
+
         if (Loan) {
           const user = await Users.findOne({
             IDnumber: Loan.userID,
           }).lean();
-          console.log(user);
+
           return Response.json(user);
         } else {
           return Response.json({});
@@ -130,12 +130,11 @@ export async function POST(req: Request) {
       if (!books) {
         return Response.json({ message: "Book was not found!" });
       }
-      console.log("Sum..");
+
       if (books.sum && books.sum < sum && sum === 0) {
         return Response.json({ message: "Sum was wrongly set!" });
       }
 
-      console.log("Saving sum..");
       if (books.sum) {
         books.sum = books.sum + newSum;
         await books.save();
@@ -152,8 +151,6 @@ export async function POST(req: Request) {
         );
       }
 
-      console.log("Fidn one and update sum..");
-      console.log(userID, bookID, dateFrom, dateTo, sum, _id);
       await BooksLoans.findOneAndUpdate(
         { _id: _id },
         {
@@ -172,26 +169,25 @@ export async function POST(req: Request) {
       console.log("Creating new record...");
       console.log(userID + " " + bookID + " " + sum + " " + dateFrom);
       const users = await Users.findOne({ IDnumber: userID }).lean().exec();
-      console.log("Users..");
+
       if (!users) {
         return Response.json({ message: "User was not found!" });
       }
-      console.log("Books..");
+
       const books = await Books.findOne({ _id: bookID }).exec();
       if (!books) {
         return Response.json({ message: "Book was not found!" });
       }
-      console.log("Sum..");
+
       if (books.sum && books.sum < sum && sum === 0) {
         return Response.json({ message: "Sum was wrongly set!" });
       }
-      console.log("Saving sum..");
+
       if (books.sum) {
         const newSum = books.sum - sum;
         books.sum = newSum;
         await books.save();
       }
-      console.log("Inserting loan..");
 
       const myDocument = new BooksLoans({
         userID: userID,

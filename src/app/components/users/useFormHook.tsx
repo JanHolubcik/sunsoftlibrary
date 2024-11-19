@@ -69,7 +69,7 @@ export default function useFormHook(props: props) {
             userEmail: editValue?.userEmail,
           }),
         });
-        debugger;
+
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && (newState[editValue?.key] = { ...editValue });
@@ -127,7 +127,7 @@ export default function useFormHook(props: props) {
   const renderCell = useCallback(
     (book: any, columnKey: any, key: any) => {
       const cellValue = book[columnKey];
-      console.log(columnKey);
+
       switch (columnKey) {
         case "name":
           return (

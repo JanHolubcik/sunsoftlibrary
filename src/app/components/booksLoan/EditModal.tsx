@@ -61,7 +61,6 @@ export default function EditModal(props: props) {
   };
 
   const checkForError = () => {
-    debugger;
     if (newDate && props.editValue?.dateFrom) {
       const result = compareAsc(props.editValue?.dateFrom, newDate);
 
