@@ -78,7 +78,7 @@ const AutoCompleteInput = (props: IPropType) => {
           //setValue("");
         }}
       />
-      {!isSuggestionEmpty() && value.length && suggestions.length > 0 && (
+      {!isSuggestionEmpty() && value.length > 1 && suggestions.length > 0 && (
         <ul className="bg-white border-blue-500 border-2 rounded hover:cursor-pointer absolute top-10 w-full z-20 max-h-64 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <li
