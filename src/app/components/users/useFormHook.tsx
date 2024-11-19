@@ -159,7 +159,7 @@ export default function useFormHook(props: props) {
             <p className="relative flex gap-1  items-center ">
               <CalendarIcon />
 
-              {format(cellValue, "dd/MM/yyyy")}
+              {cellValue ? format(cellValue, "dd/MM/yyyy") : ""}
             </p>
           );
         case "actions":
