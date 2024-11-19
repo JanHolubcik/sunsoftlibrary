@@ -40,7 +40,7 @@ export default function NewModal(props: props) {
   const [suggestionsBookName, setSuggestionBookName] = useState<bookLoan>();
   const [user, setSetUser] = useState("");
   const [bookName, setBookName] = useState("");
-
+  const [error, setError] = useState("");
   const handleSelectionBook = (index: number) => {
     suggestionsBookName && setBook(suggestionsBookName[index]);
   };
@@ -169,6 +169,7 @@ export default function NewModal(props: props) {
             })
           }
         />
+        <p className="ml-2 mr-1 text-red-600">{error}</p>
       </ModalBody>
       <ModalFooter>
         <Button color="danger" variant="light" onPress={props.onClose}>
@@ -179,9 +180,24 @@ export default function NewModal(props: props) {
           className="flex-2 m-1"
           color="primary"
           onPress={async () => {
-            await saveRecord();
-            await props.handleAction("new");
-            props.onClose();
+            debugger;
+            if (
+              book?.sum &&
+              state?.dateFrom &&
+              userOB?.IDnumber &&
+              state?.sum > -1 &&
+              book?.sum >= state?.sum
+            ) {
+              await saveRecord();
+              await props.handleAction("new");
+              props.onClose();
+            } else {
+              if (userOB?.IDnumber && book?._id) {
+                setError("Values are wrongly filled");
+              } else {
+                setError("Borrower or book doesn't exists in database");
+              }
+            }
           }}
         >
           Save new record

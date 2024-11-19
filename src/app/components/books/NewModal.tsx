@@ -41,8 +41,7 @@ export default function NewModal(props: props) {
   const [suggestionsBookName, setSuggestionBookName] = useState();
   const [author, setAuthor] = useState("");
   const [bookName, setBookName] = useState("");
-  const router = useRouter();
-  const newBook = useRef<edit>();
+
   const saveRecord = async () => {
     const newBookDB = await fetch("/api/books", {
       method: "POST",

@@ -12,7 +12,10 @@ import {
 import mongoose from "mongoose";
 import { useCallback, useRef, useState } from "react";
 import { bookLoan, bookLoanObject } from "../../types/types";
-
+import { format } from "date-fns";
+import { DeleteIcon } from "../../../../public/DeleteIcon";
+import { EditIcon } from "../../../../public/EditIcon";
+import { UserIcon } from "../../../../public/UserIcon";
 type props = {
   newValues: bookLoan; // any so we can make this component universal
   labels: {
@@ -98,6 +101,7 @@ export default function useFormHook(props: props) {
       }
       case "new": {
         const newVal = await refetch();
+        setEditValue(books[books.length]);
         console.log(newVal);
         setBooks(newVal);
       }
@@ -125,16 +129,14 @@ export default function useFormHook(props: props) {
 
   const renderCell = useCallback((book: any, columnKey: any, key: any) => {
     const cellValue = book[columnKey];
-
+    console.log(columnKey, book[columnKey]);
     switch (columnKey) {
-      case "author":
+      case "username":
         return (
-          <>
-            <User
-              avatarProps={{ radius: "lg", src: book.avatar }}
-              name={cellValue}
-            ></User>
-          </>
+          <User
+            avatarProps={{ radius: "lg", src: book.avatar }}
+            name={cellValue}
+          ></User>
         );
       case "nameBook":
         return (
@@ -142,10 +144,30 @@ export default function useFormHook(props: props) {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
+      case "author": {
+        return (
+          <User
+            avatarProps={{ radius: "lg", src: book.avatar }}
+            name={cellValue}
+          ></User>
+        );
+      }
       case "quantity":
         return (
           <p className="relative flex justify-center items-center gap-2">
             {cellValue}
+          </p>
+        );
+      case "from":
+        return (
+          <p className="relative flex justify-center items-center gap-2">
+            {format(cellValue, "dd/MM/yyyy")}
+          </p>
+        );
+      case "to":
+        return (
+          <p className="relative flex justify-center items-center gap-2">
+            {cellValue ? format(cellValue, "dd/MM/yyyy") : ""}
           </p>
         );
       case "actions":
@@ -163,14 +185,19 @@ export default function useFormHook(props: props) {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
+                  className="flex flex-row"
                   onPress={() => openModalAndSetEdit(key as number)}
                 >
+                  <EditIcon></EditIcon>
                   Edit
                 </DropdownItem>
                 <DropdownItem
+                  className="flex flex-row"
                   onPress={() => openModalAndSetDelete(key as number)}
                 >
-                  Delete
+                  <DeleteIcon />
+                  <UserIcon />
+                  <p>Delete</p>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

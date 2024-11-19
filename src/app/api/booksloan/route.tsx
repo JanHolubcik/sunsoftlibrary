@@ -141,6 +141,17 @@ export async function POST(req: Request) {
         await books.save();
       }
 
+      if (dateTo) {
+        const books = await Books.findOneAndUpdate(
+          { _id: bookID },
+          {
+            $inc: {
+              sum: sum,
+            },
+          }
+        );
+      }
+
       await BooksLoans.findOneAndUpdate(
         { _id: _id },
         {
@@ -206,16 +217,18 @@ export async function DELETE(req: Request) {
 
   await connectDB();
   try {
-    console.log(_id + " " + bookID + " " + sum + " ");
-    const books = await Books.findOne({ _id: bookID }).exec();
+    const books = await Books.findOneAndUpdate(
+      { _id: bookID },
+      {
+        $inc: {
+          sum: sum,
+        },
+      }
+    ).exec();
     if (!books) {
       return Response.json({ message: "Error when finding book" });
     }
-    if (books.sum) {
-      const newSum = books.sum + sum;
-      books.sum = newSum;
-      await books.save();
-    }
+
     await BooksLoans.findOneAndDelete({ _id: _id });
 
     return Response.json({ message: "Updating book was successful" });

@@ -18,10 +18,6 @@ const labels: typeLabels = [
     label: "NAME",
   },
   {
-    key: "surname",
-    label: "SURNAME",
-  },
-  {
     key: "IDnumber",
     label: "ID NUMBER",
   },

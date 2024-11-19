@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 import mongoose from "mongoose";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { format } from "date-fns";
 type props = {
   newValues: {
     _id: mongoose.Types.ObjectId;
@@ -121,33 +121,28 @@ export default function useFormHook(props: props) {
 
   const renderCell = useCallback((book: any, columnKey: any, key: any) => {
     const cellValue = book[columnKey];
-
+    console.log(columnKey);
     switch (columnKey) {
       case "name":
         return (
           <>
             <User
               avatarProps={{ radius: "lg", src: book.avatar }}
-              name={cellValue}
+              name={cellValue + " " + book["surname"]}
             ></User>
           </>
         );
-      case "surname":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
+
       case "idNumber":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case "date":
+      case "dateOfBirth":
         return (
           <p className="relative flex justify-center items-center gap-2">
-            {cellValue}
+            {format(cellValue, "dd/MM/yyyy")}
           </p>
         );
       case "actions":

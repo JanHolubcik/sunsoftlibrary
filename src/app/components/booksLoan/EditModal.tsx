@@ -42,7 +42,7 @@ type props = {
 const data = ["One", "Two", "Three"];
 export default function EditModal(props: props) {
   const [suggestionUser, setSuggestionUser] = useState<users>();
-
+  const [error, setError] = useState("");
   const [user, setSetUser] = useState("");
 
   const handleSuggestionUser = (index: number) => {
@@ -165,6 +165,11 @@ export default function EditModal(props: props) {
             });
           }}
         />
+        {props.editValue?.dateTo && (
+          <div className="m-1 w-full rounded-lg bg-amber-500">
+            <p className="p-1 m-1">Can't no longer edit returned book.</p>
+          </div>
+        )}
       </ModalBody>
       <ModalFooter>
         <Button color="danger" variant="light" onPress={props.onClose}>
@@ -174,9 +179,24 @@ export default function EditModal(props: props) {
           type="button"
           className="flex-2 m-1"
           color="primary"
+          disabled={props.editValue?.dateTo ? true : false}
           onPress={() => {
-            props.handleAction("update");
-            props.onClose();
+            if (
+              props.editValue?.dateTo &&
+              !props.editValue?.dateTo &&
+              props.editValue?.quantity &&
+              user.length > 1 &&
+              props.editValue?.quantity > -1
+            ) {
+              props.handleAction("update");
+              props.onClose();
+            } else {
+              if (props.editValue?.dateTo) {
+                setError("Can't no longer edit book loan.");
+              } else {
+                setError("Borrower or book doesn't exists in database");
+              }
+            }
           }}
         >
           Save
