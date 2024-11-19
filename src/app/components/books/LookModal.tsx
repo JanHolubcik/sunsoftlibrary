@@ -76,7 +76,7 @@ export default function LookModal(props: props) {
 
   return (
     <>
-      <ModalHeader className="flex flex-col gap-1">New record</ModalHeader>
+      <ModalHeader className="flex flex-col gap-1">Find book</ModalHeader>
       <ModalBody>
         <h1 className="ml-2 font-bold">Book name</h1>
         <AutoCompleteInput
