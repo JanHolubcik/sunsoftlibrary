@@ -11,7 +11,9 @@ import {
 } from "@nextui-org/react";
 import mongoose from "mongoose";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { booksObject } from "../../types/types";
+import { booksObject, books } from "../../types/types";
+import { EditIcon } from "@/public/EditIcon";
+import { DeleteIcon } from "@/public/DeleteIcon";
 
 type props = {
   formValues: (
@@ -54,69 +56,100 @@ type edit = {
 
 export default function useFormHook(props: props) {
   const [books, setBooks] = useState(props.newValues);
+  const [newValues, setNewValues] = useState<books>();
   const [editValue, setEditValue] = useState<edit>();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const action = useRef<"update" | "delete" | "new" | "look">();
 
   const FindWhoHasThisBorrowed = async () => {};
 
+  const refetch = async () => {
+    const data = await fetch("/api/books", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let res: books = await data.json();
+
+    return res.map((val, index) => {
+      return {
+        key: index,
+        _id: val._id,
+        author: val.author,
+        nameBook: val.bookName,
+        quantity: val.sum,
+      };
+    });
+  };
+
+  useEffect(() => {
+    console.log("state changed: " + JSON.stringify(books));
+    setNewValues(books);
+  }, [books]);
+
   const handleAction = async (
     action: "new" | "update" | "delete" | "look",
     newBook?: edit
   ) => {
-    switch (action) {
-      case "update": {
-        await fetch("/api/books", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            bookID: editValue?._id,
-            author: editValue?.author,
-            name: editValue?.nameBook,
-            val: editValue?.quantity,
-          }),
-        });
-        if (editValue?.key === 0) {
-          //first row was not being updated, i have no idea why this should fix it for a while
-          setBooks((prev) => {
-            const newState = [...prev];
-            editValue && (newState[0] = { ...editValue });
-            return newState;
-          });
-        }
+    console.log("action: " + action);
+    if (action === "new") {
+      if (newBook) {
+        newBook.key = books.length;
+      }
+      setBooks((prev) => {
+        const newState = [...prev];
+        newBook && newState.push(newBook);
+        return newState;
+      });
+    }
+    if (action === "update") {
+      await fetch("/api/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bookID: editValue?._id,
+          author: editValue?.author,
+          name: editValue?.nameBook,
+          val: editValue?.quantity,
+        }),
+      });
+      if (editValue?.key === 0) {
+        //first row was not being updated, i have no idea why this should fix it for a while
         setBooks((prev) => {
           const newState = [...prev];
-          editValue?.key && (newState[editValue?.key] = { ...editValue });
+          editValue && (newState[0] = { ...editValue });
           return newState;
         });
-        break;
       }
-      case "delete": {
-        await fetch("/api/books", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ bookID: editValue?._id }),
-        });
-        setBooks((prev) => {
-          const newState = [...prev];
-          editValue?.key && newState.splice(editValue?.key);
-          return newState;
-        });
-        break;
-      }
-      case "new": {
-      }
-      case "look": {
-      }
+      setBooks((prev) => {
+        const newState = [...prev];
+        editValue?.key && (newState[editValue?.key] = { ...editValue });
+        return newState;
+      });
+    }
+    if (action === "delete") {
+      await fetch("/api/books", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookID: editValue?._id }),
+      });
+      setBooks((prev) => {
+        const newState = [...prev];
+        editValue?.key && newState.splice(editValue?.key);
+        return newState;
+      });
     }
   };
 
   const openModalAndSetEdit = (key: number) => {
+    newValues;
     action.current = "update";
+    console.log("update : " + JSON.stringify(books));
     setEditValue(books[key]);
     onOpen();
   };
@@ -128,7 +161,7 @@ export default function useFormHook(props: props) {
   };
 
   const openModalAndSetNew = () => {
-    action.current = "look";
+    action.current = "new";
 
     onOpen();
   };
@@ -179,14 +212,24 @@ export default function useFormHook(props: props) {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
+                  className="flex flex-row"
                   onPress={() => openModalAndSetEdit(key as number)}
                 >
-                  Edit
+                  <div className="flex flex-row ">
+                    <div className="mt-1">
+                      <EditIcon />
+                    </div>
+                    <p className="flex flex-row self-center ml-1 mb-1 ">Edit</p>
+                  </div>
                 </DropdownItem>
                 <DropdownItem
+                  className="flex flex-row"
                   onPress={() => openModalAndSetDelete(key as number)}
                 >
-                  Delete
+                  <div className="flex flex-row">
+                    <DeleteIcon />
+                    <p className="flex flex-row self-center ml-1">Delete</p>
+                  </div>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -199,6 +242,7 @@ export default function useFormHook(props: props) {
 
   return {
     books,
+    newValues,
     editValue,
     setEditValue,
     isOpen,

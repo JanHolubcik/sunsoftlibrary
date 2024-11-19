@@ -164,7 +164,6 @@ export default function NewModal(props: props) {
               state?.quantity > -1
             ) {
               const newBook = await saveRecord();
-
               props.handleAction("new", newBook);
               props.onClose();
             } else {

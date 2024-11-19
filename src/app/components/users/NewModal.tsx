@@ -47,7 +47,7 @@ export default function NewModal(props: props) {
         IDnumber: state.IDnumber,
         name: state?.name,
         surname: state?.surname,
-        dateOfBirth: state?.dateOfBirth.toISOString(),
+        dateOfBirth: state?.dateOfBirth,
         userEmail: state?.userEmail,
       }),
     })

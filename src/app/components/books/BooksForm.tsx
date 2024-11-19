@@ -21,7 +21,7 @@ import {
   useDisclosure,
   User,
 } from "@nextui-org/react";
-import { EditIcon } from "../../../../public/EditIcon";
+
 import { VerticalDotsIcon } from "../../../../public/VerticalDotsIcons";
 import { SetStateAction, useCallback, useRef, useState } from "react";
 import EditModal from "./EditModal";
@@ -29,6 +29,8 @@ import DeleteModal from "./DeleteModal";
 import useFormHook from "./useFormHook";
 import NewModal from "./NewModal";
 import LookModal from "./LookModal";
+import { AddBook } from "@/public/AddBook";
+import { FindIcon } from "@/public/FindIcon";
 
 type props = {
   formValues: (
@@ -69,6 +71,7 @@ type props = {
  */
 export default function BooksForm(props: props) {
   const {
+    newValues,
     books,
     onOpen,
     editValue,
@@ -96,7 +99,7 @@ export default function BooksForm(props: props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={books}>
+        <TableBody items={newValues ? newValues : books}>
           {(item) => (
             <TableRow className="to-blue-950" key={item.key}>
               {(columnKey) => (
@@ -158,9 +161,10 @@ export default function BooksForm(props: props) {
             name="action"
             value="delete"
             color="primary"
-            className="max-w-[200px] mr-5"
+            className="max-w-[220px] mr-5  font-semibold"
           >
-            + Add new item
+            <AddBook />
+            Add book
           </Button>
           <Button
             onClick={() => openModalAndSearch()}
@@ -168,9 +172,12 @@ export default function BooksForm(props: props) {
             name="action"
             value="delete"
             color="secondary"
-            className="max-w-[200px]"
+            className="max-w-[220px]  font-semibold"
           >
-            Find who borrowed book
+            <div className="w-[25px] h-[25px] m-0 pl-1">
+              <FindIcon />
+            </div>
+            <p className="mr-2">Find who borrowed book </p>
           </Button>
         </div>
       </>

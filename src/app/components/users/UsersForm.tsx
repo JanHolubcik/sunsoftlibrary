@@ -1,29 +1,19 @@
 "use client";
-import mongoose, { ObjectId } from "mongoose";
-import { Input } from "@nextui-org/input";
+import mongoose from "mongoose";
+
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Modal,
-  ModalBody,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   Table,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
-  useDisclosure,
-  User,
 } from "@nextui-org/react";
-import { EditIcon } from "../../../../public/EditIcon";
-import { VerticalDotsIcon } from "../../../../public/VerticalDotsIcons";
-import { SetStateAction, useCallback, useRef, useState } from "react";
+import { AddUser } from "@/public/AddUser";
+
 import useFormHook from "./useFormHook";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
@@ -133,10 +123,11 @@ export default function UsersForm(props: props) {
           type="button"
           name="action"
           value="delete"
-          className="m-2 self-end max-w-[200px]"
+          className="m-2 self-end max-w-[200px] font-semibold"
           color="primary"
         >
-          + Add new item
+          <AddUser />
+          Add user
         </Button>
       </>
     </div>

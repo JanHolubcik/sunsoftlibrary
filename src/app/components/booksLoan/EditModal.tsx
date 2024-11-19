@@ -51,6 +51,8 @@ export default function EditModal(props: props) {
         const newState = prev;
         newState!.userInfo.name = suggestionUser[index].name;
         newState!.userInfo.surname = suggestionUser[index].surname;
+        newState!.userInfo.IDnumber = suggestionUser[index].IDnumber;
+
         return newState;
       });
 
@@ -80,7 +82,9 @@ export default function EditModal(props: props) {
 
     props.setEditValue((prev) => {
       const newState = prev;
-      if (newState) newState.userInfo.name = e;
+      if (newState) {
+        newState.userInfo.name = e;
+      }
       return newState;
     });
   };
@@ -181,22 +185,8 @@ export default function EditModal(props: props) {
           color="primary"
           disabled={props.editValue?.dateTo ? true : false}
           onPress={() => {
-            if (
-              props.editValue?.dateTo &&
-              !props.editValue?.dateTo &&
-              props.editValue?.quantity &&
-              user.length > 1 &&
-              props.editValue?.quantity > -1
-            ) {
-              props.handleAction("update");
-              props.onClose();
-            } else {
-              if (props.editValue?.dateTo) {
-                setError("Can't no longer edit book loan.");
-              } else {
-                setError("Borrower or book doesn't exists in database");
-              }
-            }
+            props.handleAction("update");
+            props.onClose();
           }}
         >
           Save

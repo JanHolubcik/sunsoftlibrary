@@ -152,6 +152,8 @@ export async function POST(req: Request) {
         );
       }
 
+      console.log("Fidn one and update sum..");
+      console.log(userID, bookID, dateFrom, dateTo, sum, _id);
       await BooksLoans.findOneAndUpdate(
         { _id: _id },
         {

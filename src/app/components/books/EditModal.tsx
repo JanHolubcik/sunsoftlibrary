@@ -37,7 +37,7 @@ export default function EditModal(props: props) {
   };
 
   useEffect(() => {
-    if (author.length > 1 || bookName.length > 1) {
+    if (author || bookName) {
       const fetchSuggestions = async () => {
         const data = await fetch(
           `/api/books?author=${author}&bookName=${bookName}`,

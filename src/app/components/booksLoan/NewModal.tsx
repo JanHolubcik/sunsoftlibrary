@@ -86,7 +86,7 @@ export default function NewModal(props: props) {
   };
 
   useEffect(() => {
-    if (bookName.length > 1 || user.length > 1) {
+    if (bookName || user) {
       const fetchSuggestions = async () => {
         const data = await fetch(
           `/api/booksloan?bookName=${bookName}&user=${user}`,

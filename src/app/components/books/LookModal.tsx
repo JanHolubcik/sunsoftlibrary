@@ -58,7 +58,7 @@ export default function LookModal(props: props) {
   };
 
   useEffect(() => {
-    if (bookName.length > 1) {
+    if (bookName.length) {
       const fetchSuggestions = async () => {
         const data = await fetch(`/api/books?bookName=${bookName}`, {
           method: "GET",

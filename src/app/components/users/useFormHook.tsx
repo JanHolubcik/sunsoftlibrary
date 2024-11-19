@@ -11,7 +11,12 @@ import {
 } from "@nextui-org/react";
 import mongoose from "mongoose";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CalendarIcon } from "../../../../public/CalendarIcon";
 import { format } from "date-fns";
+import { DeleteIcon } from "../../../../public/DeleteIcon";
+import { EditIcon } from "@/public/EditIcon";
+import { EmailIcon } from "@/public/EmailIcon";
+
 type props = {
   newValues: {
     _id: mongoose.Types.ObjectId;
@@ -64,7 +69,7 @@ export default function useFormHook(props: props) {
             userEmail: editValue?.userEmail,
           }),
         });
-
+        debugger;
         setBooks((prev) => {
           const newState = [...prev];
           editValue?.key && (newState[editValue?.key] = { ...editValue });
@@ -85,13 +90,13 @@ export default function useFormHook(props: props) {
           editValue?.key && newState.splice(editValue?.key);
           return newState;
         });
+        break;
       }
       case "new": {
         if (newBook) {
           newBook.key = books.length;
         }
-        console.log("adding to state: " + JSON.stringify(newBook));
-        console.log("odl: " + JSON.stringify(books[0]));
+
         setBooks((prev) => {
           const newState = [...prev];
           newBook && newState.push(newBook);
@@ -119,64 +124,90 @@ export default function useFormHook(props: props) {
     onOpen();
   };
 
-  const renderCell = useCallback((book: any, columnKey: any, key: any) => {
-    const cellValue = book[columnKey];
-    console.log(columnKey);
-    switch (columnKey) {
-      case "name":
-        return (
-          <>
-            <User
-              avatarProps={{ radius: "lg", src: book.avatar }}
-              name={cellValue + " " + book["surname"]}
-            ></User>
-          </>
-        );
+  const renderCell = useCallback(
+    (book: any, columnKey: any, key: any) => {
+      const cellValue = book[columnKey];
+      console.log(columnKey);
+      switch (columnKey) {
+        case "name":
+          return (
+            <>
+              <User
+                avatarProps={{ radius: "lg", src: book.avatar }}
+                name={cellValue + " " + book["surname"]}
+              ></User>
+            </>
+          );
 
-      case "idNumber":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
-      case "dateOfBirth":
-        return (
-          <p className="relative flex justify-center items-center gap-2">
-            {format(cellValue, "dd/MM/yyyy")}
-          </p>
-        );
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon
-                    className="text-default-300"
-                    width={undefined}
-                    height={undefined}
-                  />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  onPress={() => openModalAndSetEdit(key as number)}
-                >
-                  Edit
-                </DropdownItem>
-                <DropdownItem
-                  onPress={() => openModalAndSetDelete(key as number)}
-                >
-                  Delete
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        case "idNumber":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{cellValue}</p>
+            </div>
+          );
+        case "userEmail":
+          return (
+            <div className="flex flex-row">
+              <p className="relative flex flex-row gap-1  items-center ">
+                <EmailIcon />
+                {cellValue}
+              </p>
+            </div>
+          );
+        case "dateOfBirth":
+          return (
+            <p className="relative flex gap-1  items-center ">
+              <CalendarIcon />
+
+              {format(cellValue, "dd/MM/yyyy")}
+            </p>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-end items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <VerticalDotsIcon
+                      className="text-default-300"
+                      width={undefined}
+                      height={undefined}
+                    />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    className="flex flex-row"
+                    onPress={() => openModalAndSetEdit(key as number)}
+                  >
+                    <div className="flex flex-row ">
+                      <div className="mt-1">
+                        <EditIcon />
+                      </div>
+                      <p className="flex flex-row self-center ml-1 mb-1 ">
+                        Edit
+                      </p>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    className="flex flex-row"
+                    onPress={() => openModalAndSetDelete(key as number)}
+                  >
+                    <div className="flex flex-row">
+                      <DeleteIcon />
+                      <p className="flex flex-row self-center ml-1">Delete</p>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [books]
+  );
 
   return {
     books,
