@@ -24,6 +24,7 @@ import {
 } from "../../types/types";
 import AutoCompleteInputLoan from "./AutoCompleteInputLoan";
 import DatePicker from "react-datepicker";
+import { compareAsc } from "date-fns";
 
 type edit = {
   key: number;
@@ -44,7 +45,7 @@ export default function EditModal(props: props) {
   const [suggestionUser, setSuggestionUser] = useState<users>();
   const [error, setError] = useState("");
   const [user, setSetUser] = useState("");
-
+  const [newDate, setNewDate] = useState<Date | null>();
   const handleSuggestionUser = (index: number) => {
     suggestionUser &&
       props.setEditValue((prev) => {
@@ -57,6 +58,41 @@ export default function EditModal(props: props) {
       });
 
     suggestionUser && console.log(suggestionUser[index]);
+  };
+
+  const checkForError = () => {
+    debugger;
+    if (newDate && props.editValue?.dateFrom) {
+      const result = compareAsc(props.editValue?.dateFrom, newDate);
+
+      if (result < 0) {
+        console.log("date1 is sooner than date2");
+      } else if (result > 0) {
+        console.log("date1 is later than date2");
+        setError("Date of return can't be sooner than date of borrowing");
+        return true;
+      } else {
+        console.log("date1 and date2 are the same");
+      }
+    }
+
+    if (
+      props.editValue?.quantity !== undefined &&
+      props.editValue.quantity < 1
+    ) {
+      setError("Quantity value is zero or negative.");
+      return true;
+    }
+    if (
+      props.editValue?.quantity !== undefined &&
+      props.editValue?.bookInfo.sum !== undefined &&
+      props.editValue.quantity > props.editValue?.bookInfo.sum
+    ) {
+      setError("Maximum was exceeded.");
+      return true;
+    }
+    setError("");
+    return false;
   };
 
   useEffect(() => {
@@ -110,7 +146,9 @@ export default function EditModal(props: props) {
           readOnly
         />
 
-        <h1 className="ml-2 font-bold">Quantity</h1>
+        <h1 className="ml-2 font-bold">
+          Quantity {"(max " + props.editValue?.bookInfo.sum + ")"}
+        </h1>
         <Input
           className="ml-1 mr-1"
           labelPlacement="outside"
@@ -157,16 +195,10 @@ export default function EditModal(props: props) {
         <h1 className="ml-2 font-bold">Date of return</h1>
         <DatePicker
           className="bg-zinc-800 ml-1 mr-1 p-2 rounded-xl w-full border-none focus:border-none border-1"
-          selected={props.editValue?.dateTo}
+          selected={props.editValue?.dateTo ? props.editValue?.dateTo : newDate}
           dateFormat="dd/MM/yyyy"
           onChange={(e) => {
-            props.setEditValue((prev) => {
-              const newState = prev;
-              if (newState)
-                // type asserting as any, iso is a string but work like Date maybe i will fix this later
-                e ? (newState.dateTo = e.toISOString() as any) : new Date();
-              return newState;
-            });
+            setNewDate(e);
           }}
         />
         {props.editValue?.dateTo && (
@@ -174,6 +206,7 @@ export default function EditModal(props: props) {
             <p className="p-1 m-1">Can't no longer edit returned book.</p>
           </div>
         )}
+        <p className="ml-1 mr-1 text-red-600">{error}</p>
       </ModalBody>
       <ModalFooter>
         <Button color="danger" variant="light" onPress={props.onClose}>
@@ -183,10 +216,25 @@ export default function EditModal(props: props) {
           type="button"
           className="flex-2 m-1"
           color="primary"
-          disabled={props.editValue?.dateTo ? true : false}
+          isDisabled={props.editValue?.dateTo ? true : false}
           onPress={() => {
-            props.handleAction("update");
-            props.onClose();
+            const check = checkForError();
+            if (!check) {
+              if (newDate) {
+                props.setEditValue((prev) => {
+                  const newState = prev;
+                  if (newState)
+                    // type asserting as any, iso is a string but work like Date maybe i will fix this later
+                    newState
+                      ? (newState.dateTo = newDate.toISOString() as any)
+                      : new Date();
+                  return newState;
+                });
+              }
+
+              props.handleAction("update");
+              props.onClose();
+            }
           }}
         >
           Save

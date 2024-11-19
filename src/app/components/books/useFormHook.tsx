@@ -83,11 +83,6 @@ export default function useFormHook(props: props) {
     });
   };
 
-  useEffect(() => {
-    console.log("state changed: " + JSON.stringify(books));
-    setNewValues(books);
-  }, [books]);
-
   const handleAction = async (
     action: "new" | "update" | "delete" | "look",
     newBook?: edit
@@ -172,73 +167,78 @@ export default function useFormHook(props: props) {
     onOpen();
   };
 
-  const renderCell = useCallback((book: any, columnKey: any, key: any) => {
-    const cellValue = book[columnKey];
+  const renderCell = useCallback(
+    (book: any, columnKey: any, key: any) => {
+      const cellValue = book[columnKey];
 
-    switch (columnKey) {
-      case "author":
-        return (
-          <>
-            <User
-              avatarProps={{ radius: "lg", src: book.avatar }}
-              name={cellValue}
-            ></User>
-          </>
-        );
-      case "nameBook":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
-      case "quantity":
-        return (
-          <p className="relative flex justify-center items-center gap-2">
-            {cellValue}
-          </p>
-        );
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon
-                    className="text-default-300"
-                    width={undefined}
-                    height={undefined}
-                  />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem
-                  className="flex flex-row"
-                  onPress={() => openModalAndSetEdit(key as number)}
-                >
-                  <div className="flex flex-row ">
-                    <div className="mt-1">
-                      <EditIcon />
+      switch (columnKey) {
+        case "author":
+          return (
+            <>
+              <User
+                avatarProps={{ radius: "lg", src: book.avatar }}
+                name={cellValue}
+              ></User>
+            </>
+          );
+        case "nameBook":
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">{cellValue}</p>
+            </div>
+          );
+        case "quantity":
+          return (
+            <p className="relative flex justify-center items-center gap-2">
+              {cellValue}
+            </p>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-end items-center gap-2">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button isIconOnly size="sm" variant="light">
+                    <VerticalDotsIcon
+                      className="text-default-300"
+                      width={undefined}
+                      height={undefined}
+                    />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    className="flex flex-row"
+                    onPress={() => openModalAndSetEdit(key as number)}
+                  >
+                    <div className="flex flex-row ">
+                      <div className="mt-1">
+                        <EditIcon />
+                      </div>
+                      <p className="flex flex-row self-center ml-1 mb-1 ">
+                        Edit
+                      </p>
                     </div>
-                    <p className="flex flex-row self-center ml-1 mb-1 ">Edit</p>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                  className="flex flex-row"
-                  onPress={() => openModalAndSetDelete(key as number)}
-                >
-                  <div className="flex flex-row">
-                    <DeleteIcon />
-                    <p className="flex flex-row self-center ml-1">Delete</p>
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+                  </DropdownItem>
+                  <DropdownItem
+                    className="flex flex-row"
+                    onPress={() => openModalAndSetDelete(key as number)}
+                  >
+                    <div className="flex flex-row">
+                      <DeleteIcon />
+                      <p className="flex flex-row self-center ml-1">Delete</p>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [books]
+  );
 
   return {
     books,
