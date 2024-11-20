@@ -162,23 +162,28 @@ export default function NewModal(props: props) {
           color="primary"
           onPress={async () => {
             if (
+              state?.IDnumber &&
               state?.name &&
               state?.userEmail &&
               state?.surname &&
               state?.dateOfBirth &&
+              state?.IDnumber.length > 1 &&
               state.userEmail.length > 1 &&
               state?.surname?.length > 1 &&
               state?.name.length > 1
             ) {
               const pattern =
                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-              if (pattern.test(state?.userEmail)) {
+              if (
+                pattern.test(state?.userEmail) &&
+                state?.IDnumber.toLowerCase().match(/^[A-Za-z]{2}[0-9]{6}$/)
+              ) {
                 setError("");
                 const newData = await saveRecord();
                 props.handleAction("new", newData);
                 props.onClose();
               } else {
-                setError("Email is incorrect");
+                setError("Email or ID number is incorrect");
               }
             } else {
               setError("Values are not correctly filled out!");
